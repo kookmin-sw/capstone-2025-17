@@ -7,7 +7,7 @@ public class PickUpController : MonoBehaviour
     public Transform pickPosition;  // 물체를 잡을 위치
     private GameObject heldObject; // 들고 있는 물체
     private Rigidbody heldObjectRb; // 들고 있는 물체의 Rigidbody
-    private GameObject detectedObject; // 감지된 물체
+    public GameObject detectedObject; // 감지된 물체
 
     public float detectionRange = 10f; // 물체 감지 범위
     public float pickUpOffset = 0.5f; // 물체를 들 때의 오프셋 거리
@@ -21,11 +21,6 @@ public class PickUpController : MonoBehaviour
 
     void Start()
     {
-        Camera mainCamera = Camera.main;
-        raycastPosition = mainCamera.transform; // holdPosition을 raycastPosition으로 변경
-
-        // UI 텍스트 비활성화
-        if (pickUpUI != null) pickUpUI.enabled = false;
         // 밀기 컨트롤러 초기화
         pushController = GetComponent<Player_Push_Controller>();
 
@@ -44,9 +39,6 @@ public class PickUpController : MonoBehaviour
 
     void Update()
     {
-        // 레이캐스트로 물체 감지
-        DetectPickableObject();
-
         // 물체를 들고 있을 경우 위치 업데이트
         if (heldObject != null)
         {
@@ -85,49 +77,6 @@ public class PickUpController : MonoBehaviour
         GUI.color = Color.red; // 색상
         GUI.DrawTexture(new Rect(screenCenterX - crosshairSize / 2, screenCenterY - thickness / 2, crosshairSize, thickness), Texture2D.whiteTexture);
         GUI.DrawTexture(new Rect(screenCenterX - thickness / 2, screenCenterY - crosshairSize / 2, thickness, crosshairSize), Texture2D.whiteTexture);
-    }
-
-    void DetectPickableObject()
-    {
-        detectedObject = null;
-        RaycastHit hit;
-
-        // raycastPosition이 할당되었는지 확인
-        if (raycastPosition == null)
-        {
-            Debug.LogError("raycastPosition 변수가 할당되지 않았습니다.");
-            return;
-        }
-
-        // 레이캐스트로 물체 감지
-        if (Physics.Raycast(raycastPosition.position, raycastPosition.forward, out hit, detectionRange))
-        {
-            if (hit.collider.CompareTag("Pickable"))
-            {
-                detectedObject = hit.collider.gameObject;
-                // UI 업데이트
-                if (pickUpUI != null && heldObject == null)
-                {
-                    pickUpUI.enabled = true;
-                    pickUpUI.text = "Press F to Pick Up";
-                }
-                Debug.Log("물건 감지중: " + detectedObject.name);
-            }
-            else
-            {
-                Debug.Log("감지된 오브젝트가 Pickable 태그가 아님: " + hit.collider.gameObject.name);
-            }
-        }
-        else
-        {
-            Debug.Log("레이캐스트로 아무것도 감지되지 않음");
-        }
-
-        // 감지된 물체 없으면 UI 숨기기
-        if (detectedObject == null && heldObject == null && pickUpUI != null)
-        {
-            pickUpUI.enabled = false;
-        }
     }
 
     public void HandlePickUpOrDrop()

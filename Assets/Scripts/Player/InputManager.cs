@@ -4,11 +4,13 @@ public class InputManager : MonoBehaviour
 {
     private Player_Push_Controller pushController;
     private PickUpController pickUpController;
+    private InteractManager interactManager;
 
     void Start()
     {
         pushController = GetComponent<Player_Push_Controller>();
         pickUpController = GetComponent<PickUpController>();
+        interactManager = GetComponent<InteractManager>();
 
         if (pushController == null) Debug.LogError("Player_Push_Controller가 없습니다.");
         if (pickUpController == null) Debug.LogError("PickUpController가 없습니다.");
@@ -19,8 +21,7 @@ public class InputManager : MonoBehaviour
         // F 키: 물체 잡기/놓기
         if (Input.GetKeyDown(KeyCode.F))
         {
-            Debug.Log("F 키 입력 감지됨"); // 디버그 로그 추가
-            pickUpController.HandlePickUpOrDrop();
+            interactManager.OnInput();
         }
 
         // 마우스 왼쪽 클릭: 밀치기 또는 물체 던지기

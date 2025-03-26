@@ -7,6 +7,7 @@ TagManager:
   - Pickable
   - Ground
   - WindArea
+  - Interactable
   layers:
   - Default
   - TransparentFX
