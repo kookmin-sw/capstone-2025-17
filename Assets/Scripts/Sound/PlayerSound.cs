@@ -7,6 +7,7 @@ public class PlayerSound : MonoBehaviour
     [SerializeField] private SoundPlayer soundPlayer;
     [SerializeField] private string walkingSound;
     [SerializeField] private string throwSound;
+    [SerializeField] private string jumpSound;
     public void FootStep()
     {
         soundPlayer.PlaySFX(walkingSound);
@@ -14,5 +15,9 @@ public class PlayerSound : MonoBehaviour
     public void ThrowObject()
     {
         soundPlayer.PlaySFX(throwSound);
+    }
+    public void Jump()
+    {
+        soundPlayer.PlaySFX(jumpSound);
     }
 }

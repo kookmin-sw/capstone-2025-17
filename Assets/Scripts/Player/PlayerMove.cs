@@ -6,9 +6,9 @@ using Photon.Pun;
 
 public class CharacterController : MonoBehaviourPun
 {
-    [SerializeField] private float moveSpeed = 2f;              // 걷기 속도
-    [SerializeField] private float sprintSpeed = 3f;             // 달리기 속도
-    [SerializeField] private float jumpForce = 3f;                // 점프 힘
+    private float moveSpeed = 2f;              // 걷기 속도
+    private float sprintSpeed = 3f;             // 달리기 속도
+    private float jumpForce = 3f;                // 점프 힘
     private float groundCheckDistance = 0.4f;                  // 땅 감지 거리
     private float acceleration = 20f;                                       // 이동 가속도
 
