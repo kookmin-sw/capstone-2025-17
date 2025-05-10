@@ -1,7 +1,6 @@
 using Photon.Pun;
 using UnityEngine;
 using System.Collections;
-using Photon.Pun;
 
 
 public class CharacterController : MonoBehaviourPun
@@ -12,7 +11,7 @@ public class CharacterController : MonoBehaviourPun
     private float groundCheckDistance = 0.4f;                  // 땅 감지 거리
     private float acceleration = 20f;                                       // 이동 가속도
 
-    private bool isGrounded;       
+    private bool isGrounded;
     private Rigidbody rb;
     //private RotateToMouse rotateToMouse;
     //private Transform cameraTransform; 이거 없어도 될거 같은데 혹시몰라서 그냥 주석처리
@@ -59,7 +58,7 @@ public class CharacterController : MonoBehaviourPun
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-    
+
         // rotateToMouse = GetComponent<RotateToMouse>(); 이거 없어도 될거 같은데 혹시몰라서 그냥 주석처리
     }
 
@@ -87,7 +86,7 @@ public class CharacterController : MonoBehaviourPun
             waterEffect.Play();  // 물 파티클을 시작 (파이프에서 물 계속 나옴)
         }
 
-        ps = waterEffect; 
+        ps = waterEffect;
         particles = new ParticleSystem.Particle[ps.main.maxParticles];
 
 
@@ -96,21 +95,25 @@ public class CharacterController : MonoBehaviourPun
     private bool wasGroundedLastFrame = true;
     private bool isFallingAnimPlayed = false;
     private bool isJumping = false;
+    private float airborneStartTime = 0f; // 공중에 떠있는 시작 시간 저장
+
 
     void Update()
     {
         CheckGrounded();
 
 
-        if (isJumping && !isGrounded && Time.time - jumpStartTime > jumpTimeout)
+        // 공중에 처음 뜨면 시간 저장
+        if (!isGrounded && wasGroundedLastFrame)
         {
-            isJumping = false;
-            animator.ResetTrigger(jumpTriggerName);
-            animator.SetTrigger(fallTriggerName);
-            isFallingAnimPlayed = true;
+            airborneStartTime = Time.time;
         }
 
-        if (!isGrounded && wasGroundedLastFrame && !isJumping && !isFallingAnimPlayed)
+        // 공중에 떠있는 시간 계산
+        float timeInAir = Time.time - airborneStartTime;
+
+        // 낙하 애니메이션 트리거 0.3초 이상 공중에 떠있으면 낙하모션
+        if (!isGrounded && timeInAir > 0.3f && rb.velocity.y < 0 && !isJumping && !isFallingAnimPlayed)
         {
             animator.SetTrigger(fallTriggerName);
             isFallingAnimPlayed = true;
@@ -125,13 +128,6 @@ public class CharacterController : MonoBehaviourPun
             isJumping = false;
         }
 
-        if (isGrounded && !wasGroundedLastFrame)
-        {
-            animator.ResetTrigger(fallTriggerName);
-            animator.SetTrigger(fallingImpactTriggerName);
-            isFallingAnimPlayed = false;
-            isJumping = false;
-        }
 
         wasGroundedLastFrame = isGrounded;
 

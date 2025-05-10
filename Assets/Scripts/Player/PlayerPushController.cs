@@ -10,11 +10,11 @@ public class PlayerPushController : MonoBehaviourPun
     
     private bool canPush = false;
     [SerializeField] private Transform cameraMount;
-    [SerializeField] private float detectionRange = 0.5f; // 감지 거리
+    private float detectionRange = 0.5f; // 감지 거리
     [SerializeField] private TMP_Text pushUI; 
 
     private bool isPushing = false; // 밀치는 중인지 여부
-    [SerializeField] private float pushDelay = 1f; // 밀치기 딜레이
+    private float pushDelay = 1f; // 밀치기 딜레이
     
 
     void Start()

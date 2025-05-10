@@ -2,7 +2,6 @@ using Photon.Pun;
 using UnityEngine;
 using TMPro;
 using System.Collections;
-using Photon.Pun;
 
 public class PickUpController : MonoBehaviourPun
 {
@@ -19,17 +18,17 @@ public class PickUpController : MonoBehaviourPun
     private float detectionRange = 2f;        // 감지 거리
     private float pickUpOffset = 0.5f;        // 손과 물체 사이 거리
     [SerializeField] private TMP_Text pickUpUI;
-    [SerializeField] private float throwForce = 10f;
+    private float throwForce = 10f;
 
     [SerializeField] private LineRenderer trajectoryLine;
     private int trajectoryPoints = 50;
     private float timeBetweenPoints = 0.03f;
-    [SerializeField] private float dashLength = 0.1f; // 점 길이
-    [SerializeField] private float dashGap = 0.05f;
+    private float dashLength = 0.1f; // 점 길이
+    private float dashGap = 0.05f;
     private float crosshairSize = 50f;        // 에임 크기
 
-    [SerializeField] private float holdFollowSpeed = 60f;
-    [SerializeField] private float holdRotateSpeed = 10f;
+    private float holdFollowSpeed = 20f;
+    private float holdRotateSpeed = 10f;
 
     private Quaternion originalRotation; // 처음 잡았던 회전값 저장
     private bool isTouching = false;
