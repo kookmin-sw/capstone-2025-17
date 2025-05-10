@@ -197,7 +197,7 @@ public class PickUpController : MonoBehaviourPun
         if (isPickingUp) return; // 이미 줍는 중이면 무시
         if (detectedObject == null) return; // 감지된 오브젝트 없으면 무시
     
-        StartCoroutine(PickUpWithDelay(0.8f));
+        StartCoroutine(PickUpWithDelay(0.5f));
     }
 
     private IEnumerator PickUpWithDelay(float delay)
@@ -278,7 +278,7 @@ public class PickUpController : MonoBehaviourPun
         if (isDropping) return;      // 이미 내려놓는 중이면 무시
         if (heldObject == null) return; // 들고 있는 물체 없으면 무시
 
-        StartCoroutine(DropWithDelay(0.8f));
+        StartCoroutine(DropWithDelay(0.5f));
     }
 
     private IEnumerator DropWithDelay(float delay)
@@ -354,7 +354,7 @@ public class PickUpController : MonoBehaviourPun
     {
         if (heldObject != null && heldObjectRb != null)
         {
-            StartCoroutine(ThrowWithDelay(0.7f));
+            StartCoroutine(ThrowWithDelay(0.5f));
         }
     }
     private IEnumerator ThrowWithDelay(float delay)

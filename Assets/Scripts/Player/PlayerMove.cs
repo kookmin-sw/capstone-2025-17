@@ -43,6 +43,8 @@ public class CharacterController : MonoBehaviourPun
     public int MoveType = 0; // MoveType 변수 선언 및 초기화
     public string jumpTriggerName = "IsJump"; // 점프 트리거 이름
     public const string carryJumpTriggerName = "IsCarryJump"; // 점프 트리거 이름
+    public string fallTriggerName = "IsFall";
+    public string fallingImpactTriggerName = "IsFallingImpact";
 
     private void Awake()
     {
@@ -89,9 +91,33 @@ public class CharacterController : MonoBehaviourPun
         // 애니메이터 컴포넌트 가져오기
         animator = GetComponent<Animator>();
     }
+    private bool wasGroundedLastFrame = true;
+    private bool isFallingAnimPlayed = false;
+    private bool isJumping = false;
 
     void Update()
     {
+        CheckGrounded();  // 땅에 닿아 있는지 감지
+
+        if (!isGrounded && rb.velocity.y < -0.1f && !isFallingAnimPlayed && !isJumping)
+        {
+            animator.ResetTrigger(fallTriggerName); 
+            animator.SetTrigger(fallTriggerName);
+            isFallingAnimPlayed = true; 
+        }
+
+
+        if (isGrounded && !wasGroundedLastFrame)
+        {
+            animator.ResetTrigger(fallTriggerName);
+            animator.SetTrigger(fallingImpactTriggerName);
+            isFallingAnimPlayed = false; 
+            isJumping = false; 
+        }
+
+        wasGroundedLastFrame = isGrounded;
+
+
         if (GameStateManager.isServerTest && !photonView.IsMine) return;
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("lift")
         || animator.GetCurrentAnimatorStateInfo(0).IsName("lift Reverse")
@@ -103,7 +129,7 @@ public class CharacterController : MonoBehaviourPun
         }
         MoveCharacter();  // 이동
         HandleJump();     // 점프
-        CheckGrounded();  // 땅에 닿아 있는지 감지
+    
 
         // 물에 닿은 상태일 때 계속 효과가 적용되도록 유지
         if (isWet)
@@ -172,6 +198,7 @@ public class CharacterController : MonoBehaviourPun
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse); // 위쪽 방향으로 힘을 가해 점프
             isGrounded = false; // 점프 후 공중 상태로 변경
+            isJumping = true;
 
             bool isHolding = GetComponent<PickUpController>().IsHoldingObject();
             if (isHolding)
