@@ -13,7 +13,7 @@ public class CharacterController : MonoBehaviourPun
     private float acceleration = 20f;                                       // 이동 가속도
 
     private bool isGrounded;                                // 캐릭터가 땅에 닿아 있는지 여부
-    private Rigidbody rb;  
+    private Rigidbody rb;
     private RotateToMouse rotateToMouse;
     private Transform cameraTransform;
 
@@ -46,6 +46,10 @@ public class CharacterController : MonoBehaviourPun
     public string fallTriggerName = "IsFall";
     public string fallingImpactTriggerName = "IsFallingImpact";
 
+    private float jumpStartTime = -0.5f; // 점프 시작 시간 저장
+    private float jumpTimeout = 0.5f; // 1초 이내에 착지 안하면 isJumping false 처리
+
+
     private void Awake()
     {
         if (GameStateManager.isServerTest)
@@ -67,7 +71,7 @@ public class CharacterController : MonoBehaviourPun
         {
             if (!photonView.IsMine) return;
         }
-        
+
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true; // 캐릭터 회전이 물리적으로 영향을 받지 않도록 설정
         cameraTransform = Camera.main.transform; // 메인 카메라의 Transform 가져오기
@@ -99,20 +103,30 @@ public class CharacterController : MonoBehaviourPun
     {
         CheckGrounded();  // 땅에 닿아 있는지 감지
 
-        if (!isGrounded && rb.velocity.y < -0.1f && !isFallingAnimPlayed && !isJumping)
+
+        if (isJumping && !isGrounded && Time.time - jumpStartTime > jumpTimeout)
         {
-            animator.ResetTrigger(fallTriggerName); 
+            isJumping = false;
+            animator.ResetTrigger(jumpTriggerName);
             animator.SetTrigger(fallTriggerName);
-            isFallingAnimPlayed = true; 
+            isFallingAnimPlayed = true;
         }
+        
+        if (!isGrounded && wasGroundedLastFrame && !isJumping && !isFallingAnimPlayed)
+        {
+            animator.SetTrigger(fallTriggerName);
+            isFallingAnimPlayed = true;
+        }
+
+
 
 
         if (isGrounded && !wasGroundedLastFrame)
         {
             animator.ResetTrigger(fallTriggerName);
             animator.SetTrigger(fallingImpactTriggerName);
-            isFallingAnimPlayed = false; 
-            isJumping = false; 
+            isFallingAnimPlayed = false;
+            isJumping = false;
         }
 
         wasGroundedLastFrame = isGrounded;
@@ -129,7 +143,7 @@ public class CharacterController : MonoBehaviourPun
         }
         MoveCharacter();  // 이동
         HandleJump();     // 점프
-    
+
 
         // 물에 닿은 상태일 때 계속 효과가 적용되도록 유지
         if (isWet)
@@ -154,7 +168,7 @@ public class CharacterController : MonoBehaviourPun
 
     // 캐릭터 이동 처리
     void MoveCharacter()
-    {   
+    {
         float horizontal = Input.GetAxis("Horizontal"); // A, D 또는 좌우 방향키 입력 값
         float vertical = Input.GetAxis("Vertical");     // W, S 또는 상하 방향키 입력 값
 
@@ -188,29 +202,36 @@ public class CharacterController : MonoBehaviourPun
                 animator.SetInteger("MoveType", 1); // 걷기 상태
             }
         }
+        if (!isGrounded)
+        {
+            animator.SetInteger("MoveType", 0); // 낙하 중엔 이동 애니메이션 무력화
+            return;
+        }
+
     }
 
 
-    void HandleJump() //점프
+    void HandleJump()
     {
-        // 스페이스바를 누르고 땅에 닿아 있을 때 점프
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse); // 위쪽 방향으로 힘을 가해 점프
-            isGrounded = false; // 점프 후 공중 상태로 변경
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isGrounded = false;
             isJumping = true;
+            jumpStartTime = Time.time; // 점프한 시간 기록
 
             bool isHolding = GetComponent<PickUpController>().IsHoldingObject();
             if (isHolding)
             {
-                animator.SetTrigger(carryJumpTriggerName); // carry 점프 트리거 활성화
+                animator.SetTrigger(carryJumpTriggerName);
             }
             else
             {
-                animator.SetTrigger(jumpTriggerName); // 점프 트리거 활성화
+                animator.SetTrigger(jumpTriggerName);
             }
         }
     }
+
 
     void CheckGrounded() // 바닥에 닿아있는지 (점프 관련)
     {
