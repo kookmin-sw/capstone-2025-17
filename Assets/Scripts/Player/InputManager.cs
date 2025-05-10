@@ -9,6 +9,7 @@ public class InputManager : MonoBehaviourPun
     private InteractManager interactManager;
     public Animator animator;
     public string throwTriggerName = "IsThrow";
+    public string PushTriggerName = "IsPush";
     private GameObject MiniMap;
 
     private void Awake()
@@ -43,23 +44,24 @@ public class InputManager : MonoBehaviourPun
         {
             return;
         }
-        UpdateRotate();
-        if (Input.GetKeyDown(KeyCode.F)) interactManager.OnInput();
+        UpdateRotate(); //마우스 회전
+        if (Input.GetKeyDown(KeyCode.F)) interactManager.OnInput(); // F 상호작용 키
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)) // 마우스 클릭
         {
-            if (pickUpController.IsHoldingObject())
+            if (pickUpController.IsHoldingObject()) // 물체 던지기
             {
                 pickUpController.ThrowObject();
                 animator.SetTrigger(throwTriggerName);
             }
-            else if (pushController.CanPush())
+            else if (pushController.CanPush()) // 플레이어 밀치기
             {
                 pushController.PushPlayer();
+                animator.SetTrigger(PushTriggerName); 
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.R)) pickUpController.RotateHeldObject();
+        if (Input.GetKeyDown(KeyCode.R)) pickUpController.RotateHeldObject(); // 물체 회전
 
         // Tab 키 : 미니맵 On Off
         if (Input.GetKeyDown(KeyCode.Tab))

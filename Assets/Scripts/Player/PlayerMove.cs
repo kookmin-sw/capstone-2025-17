@@ -14,8 +14,8 @@ public class CharacterController : MonoBehaviourPun
 
     private bool isGrounded;       
     private Rigidbody rb;
-    private RotateToMouse rotateToMouse;
-    private Transform cameraTransform;
+    //private RotateToMouse rotateToMouse;
+    //private Transform cameraTransform; 이거 없어도 될거 같은데 혹시몰라서 그냥 주석처리
 
     // 물에 젖은 상태 관리
     private bool isWet = false;            // 물에 젖었는지
@@ -41,7 +41,7 @@ public class CharacterController : MonoBehaviourPun
     public Animator animator;
     public int MoveType = 0;
     public string jumpTriggerName = "IsJump";
-    public const string carryJumpTriggerName = "IsCarryJump";
+    public string carryJumpTriggerName = "IsCarryJump";
     public string fallTriggerName = "IsFall";
     public string fallingImpactTriggerName = "IsFallingImpact";
 
@@ -60,7 +60,7 @@ public class CharacterController : MonoBehaviourPun
         Cursor.visible = false;
 
     
-        rotateToMouse = GetComponent<RotateToMouse>();
+        // rotateToMouse = GetComponent<RotateToMouse>(); 이거 없어도 될거 같은데 혹시몰라서 그냥 주석처리
     }
 
 
@@ -73,7 +73,7 @@ public class CharacterController : MonoBehaviourPun
 
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true; // 캐릭터 회전이 물리적으로 영향을 받지 않도록 설정
-        cameraTransform = Camera.main.transform; // 메인 카메라의 Transform 가져오기
+        // cameraTransform = Camera.main.transform; // 메인 카메라의 Transform 가져오기  // 이거 없어도 될거 같은데 혹시몰라서 그냥 주석처리
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous; // 충돌 감지 모드 설정
 
         // 원래 속도와 점프력 저장
