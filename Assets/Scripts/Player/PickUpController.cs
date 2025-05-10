@@ -148,36 +148,6 @@ public class PickUpController : MonoBehaviourPun
             DropObject(); // 놓기
         }
     }
-    /*private void TryPickUp()
-    {
-        if (detectedObject == null) return;
-        if (detectedObject == recentlyThrownObject && throwTimer > 0f)
-        {
-            Debug.Log("감지 금지 : 최근 던진 오브젝트");
-            return;
-        }
-
-        heldObject = detectedObject;
-        heldObjectRb = heldObject.GetComponent<Rigidbody>();
-        if (heldObjectRb != null)
-        {
-            // 원래 물리 속성 저장
-            defaultMass = heldObjectRb.mass;
-            defaultDrag = heldObjectRb.drag;
-            defaultAngularDrag = heldObjectRb.angularDrag;
-
-            // 들고 있을 때 가벼운 속성 적용
-            heldObjectRb.mass = 0.1f; // 매우 가벼운 질량
-            heldObjectRb.drag = 5f;   // 높은 저항력
-            heldObjectRb.angularDrag = 10f; // 높은 회전 저항력
-
-            heldObjectRb.isKinematic = false;
-            heldObjectRb.useGravity = false;
-            heldObject.layer = LayerMask.NameToLayer("HeldObject");
-            originalRotation = heldObject.transform.rotation;
-        }
-    }
-*/
     private bool isPickingUp = false; // 중복 줍기 방지용
 
     public void TryPickUp()
@@ -241,25 +211,7 @@ public class PickUpController : MonoBehaviourPun
 
     }
 
-
-
-    /*public void DropObject()
-    {
-        if (heldObject != null)
-        {
-            // 원래 물리 속성 복구
-            heldObjectRb.mass = defaultMass;
-            heldObjectRb.drag = defaultDrag;
-            heldObjectRb.angularDrag = defaultAngularDrag;
-
-            heldObjectRb.useGravity = true;
-            heldObjectRb.isKinematic = false;
-            heldObject.layer = LayerMask.NameToLayer("Default");
-        }
-        ResetHeldObject();
-    }
-*/
-    private bool isDropping = false; // 중복 방지용
+    private bool isDropping = false;
 
     public void DropObject()
     {

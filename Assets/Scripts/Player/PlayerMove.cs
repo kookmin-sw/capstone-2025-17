@@ -12,7 +12,7 @@ public class CharacterController : MonoBehaviourPun
     private float groundCheckDistance = 0.4f;                  // 땅 감지 거리
     private float acceleration = 20f;                                       // 이동 가속도
 
-    private bool isGrounded;                                // 캐릭터가 땅에 닿아 있는지 여부
+    private bool isGrounded;       
     private Rigidbody rb;
     private RotateToMouse rotateToMouse;
     private Transform cameraTransform;
@@ -26,7 +26,6 @@ public class CharacterController : MonoBehaviourPun
     // 물 파티클 시스템 (파이프 오브젝트에서 발생하는 파티클)
     [SerializeField] private ParticleSystem waterEffect;     // 물 파티클 시스템
 
-    // 물에 닿은 시간
     private float wetTime = 0f;            // 물에 닿은 시간을 기록
     private const float wetDuration = 5f;  // 물에 닿은 효과 지속 시간 (5초)
 
@@ -39,15 +38,15 @@ public class CharacterController : MonoBehaviourPun
     private ParticleSystem ps;
     private ParticleSystem.Particle[] particles;
 
-    public Animator animator; // 애니메이터 컴포넌트 연결
-    public int MoveType = 0; // MoveType 변수 선언 및 초기화
-    public string jumpTriggerName = "IsJump"; // 점프 트리거 이름
-    public const string carryJumpTriggerName = "IsCarryJump"; // 점프 트리거 이름
+    public Animator animator;
+    public int MoveType = 0;
+    public string jumpTriggerName = "IsJump";
+    public const string carryJumpTriggerName = "IsCarryJump";
     public string fallTriggerName = "IsFall";
     public string fallingImpactTriggerName = "IsFallingImpact";
 
     private float jumpStartTime = -0.5f; // 점프 시작 시간 저장
-    private float jumpTimeout = 0.5f; // 1초 이내에 착지 안하면 isJumping false 처리
+    private float jumpTimeout = 0.5f; // 1초 이내에 착지
 
 
     private void Awake()
@@ -60,7 +59,7 @@ public class CharacterController : MonoBehaviourPun
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // 마우스 회전 관련 컴포넌트 가져오기
+    
         rotateToMouse = GetComponent<RotateToMouse>();
     }
 
@@ -76,7 +75,6 @@ public class CharacterController : MonoBehaviourPun
         rb.freezeRotation = true; // 캐릭터 회전이 물리적으로 영향을 받지 않도록 설정
         cameraTransform = Camera.main.transform; // 메인 카메라의 Transform 가져오기
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous; // 충돌 감지 모드 설정
-        rb.collisionDetectionMode = CollisionDetectionMode.Continuous; // 충돌 감지 모드 설정
 
         // 원래 속도와 점프력 저장
         originalMoveSpeed = moveSpeed;
@@ -89,10 +87,10 @@ public class CharacterController : MonoBehaviourPun
             waterEffect.Play();  // 물 파티클을 시작 (파이프에서 물 계속 나옴)
         }
 
-        ps = waterEffect; // 파티클 시스템 컴포넌트 할당
+        ps = waterEffect; 
         particles = new ParticleSystem.Particle[ps.main.maxParticles];
 
-        // 애니메이터 컴포넌트 가져오기
+
         animator = GetComponent<Animator>();
     }
     private bool wasGroundedLastFrame = true;
@@ -101,7 +99,7 @@ public class CharacterController : MonoBehaviourPun
 
     void Update()
     {
-        CheckGrounded();  // 땅에 닿아 있는지 감지
+        CheckGrounded();
 
 
         if (isJumping && !isGrounded && Time.time - jumpStartTime > jumpTimeout)
@@ -111,15 +109,21 @@ public class CharacterController : MonoBehaviourPun
             animator.SetTrigger(fallTriggerName);
             isFallingAnimPlayed = true;
         }
-        
+
         if (!isGrounded && wasGroundedLastFrame && !isJumping && !isFallingAnimPlayed)
         {
             animator.SetTrigger(fallTriggerName);
             isFallingAnimPlayed = true;
         }
-
-
-
+        // 트리거 초기화
+        if (isGrounded && !wasGroundedLastFrame)
+        {
+            animator.ResetTrigger(fallTriggerName);
+            animator.ResetTrigger(fallingImpactTriggerName);
+            animator.SetTrigger(fallingImpactTriggerName);
+            isFallingAnimPlayed = false;
+            isJumping = false;
+        }
 
         if (isGrounded && !wasGroundedLastFrame)
         {
@@ -161,12 +165,12 @@ public class CharacterController : MonoBehaviourPun
             slowDownTimer -= Time.deltaTime;
             if (slowDownTimer <= 0f)
             {
-                ResetSpeed(); // 원래 속도로 복구
+                ResetSpeed();
             }
         }
     }
 
-    // 캐릭터 이동 처리
+    // 캐릭터 이동
     void MoveCharacter()
     {
         float horizontal = Input.GetAxis("Horizontal"); // A, D 또는 좌우 방향키 입력 값
