@@ -7,7 +7,7 @@
 <div align="center">
 소개 영상
 <br><br>
-<img alt="Youtube" src ="https://img.shields.io/badge/Youtube-FF0000.svg?&style=for-the-badge&logo=Youtube&logoColor=white"/>
+<a href = "https://youtu.be/zvwuJRTicEw"><img alt="Youtube" src ="https://img.shields.io/badge/Youtube-FF0000.svg?&style=for-the-badge&logo=Youtube&logoColor=white"/>
 </div>
 
 ---
