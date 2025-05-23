@@ -1,7 +1,15 @@
 # 🧸 팀 17 - Toyland Trials
 
 ---
-    포스터 이미지 삽입 예정
+![Image](https://github.com/user-attachments/assets/103869d7-a533-4996-8a28-d840709cd4c1)
+---
+
+<div align="center">
+소개 영상
+<br><br>
+<img alt="Youtube" src ="https://img.shields.io/badge/Youtube-FF0000.svg?&style=for-the-badge&logo=Youtube&logoColor=white"/>
+</div>
+
 ---
 
 ## 📑 목차
