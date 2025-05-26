@@ -198,13 +198,14 @@ public class ChatManager : MonoBehaviourPun
 
     private void SetLocalSpeakerUI(int playerId, bool visibility)
     {
+
         if (visibility && recorder.TransmitEnabled)
         {
             playerIdToPanelsMap[myPlayerId].SetActive(visibility);
         }
         else
         {
-            playerIdToPanelsMap[myPlayerId].SetActive(visibility);
+            playerIdToPanelsMap[myPlayerId].SetActive(false);
         }
 
         Debug.Log($"local client " + (visibility ? " starts speaking" : " stops speaking"));
