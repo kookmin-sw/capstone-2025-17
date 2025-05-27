@@ -152,6 +152,34 @@ public class LeaderboardManager : MonoBehaviour
         }
     }
 
+    public async Task DeleteAllLeaderboardData()
+    {
+        if (!isInitialized)
+        {
+            Debug.LogError("Firebase가 초기화되지 않았습니다.");
+            return;
+        }
+
+        try
+        {
+            QuerySnapshot querySnapshot =
+                await db.Collection(COLLECTION_NAME).GetSnapshotAsync();
+
+            int docCnt = 0;
+            foreach (DocumentSnapshot document in querySnapshot.Documents)
+            {
+                await db.Collection(COLLECTION_NAME).Document(document.Id).DeleteAsync();
+                docCnt++;
+            }
+            Debug.Log($"{docCnt}개 파일 삭제됨");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"삭제 실패 : {e.Message}");
+        }
+
+    }
+
     #region Test Code
     // 테스트 데이터 저장
     private async Task SaveTestData()

@@ -35,12 +35,14 @@ public class ScoreLoader : MonoBehaviour
         {
             float time = Convert.ToSingle(row["time"]);
             string[] players = ((List<object>)row["players"]).Select(p => p.ToString()).ToArray();
-
+            
+            infoTMPs[index].alignment = TextAlignmentOptions.Left;
             infoTMPs[index++].text = $"{time:F2}초\t\t{string.Join(", ", players)}";
 
-            loadingImage.SetActive(false);
         }
 
+        loadingImage.SetActive(false);
+        // await LeaderboardManager.Instance.DeleteAllLeaderboardData();
 
     }
 
