@@ -160,7 +160,7 @@ public class ChatManager : MonoBehaviourPun
     {
         for (int i = 0; i < speakers.Length; i++)
         {
-            if (speakers[i].RemoteVoice == null) { continue; } // local speaker does't have RemoteVoice
+            if (speakers[i] == null || speakers[i].RemoteVoice == null) { continue; } // local speaker does't have RemoteVoice
 
             bool isPlaying = speakers[i].IsPlaying;
 

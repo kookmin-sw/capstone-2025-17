@@ -23,26 +23,16 @@ public class ScoreSaver : MonoBehaviour
 
     public void ShouldSendScore()
     {
-        /*        if (GameStateManager.isServerTest && Managers.GameStateManager.IsClearGame())
-                {
-                    // Transmit clear info
-                    SendScore();
-                }
-                else
-                {
-                    Debug.Log("Skip sending info");
-                }
-        */
-
-        if (GameStateManager.isServerTest)
+        if (GameStateManager.isServerTest && Managers.GameStateManager.IsClearGame())
         {
             // Transmit clear info
             SendScore();
         }
         else
         {
-            Debug.Log("Skip sending info");
+            Debug.Log("[ Clear Condition ] : Skip sending info");
         }
+
     }
 
     public async void SendScore()
@@ -51,14 +41,12 @@ public class ScoreSaver : MonoBehaviour
         if (!PhotonNetwork.IsMasterClient) return;
 
         float clearTime = Managers.GameTimerManager.GetClearTime();
+        Debug.Log($"[ Clear Condition ] : 클리어 시간 : {clearTime }");
         string[] nicknames = GetRoomPlayerNicknames();
+
+        Debug.Log("클리어 정보  전송 준비");
 
         await LeaderboardManager.Instance.SaveLeaderboardData(clearTime, nicknames);
 #endif
-    }
-
-    public void Test_SendScore()
-    {
-        ShouldSendScore();
     }
 }

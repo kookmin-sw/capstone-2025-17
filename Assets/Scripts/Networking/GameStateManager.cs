@@ -76,6 +76,11 @@ public class GameStateManager : MonoBehaviourPun, IManager
         return isGameClear && !isGameStarted;
     }
 
+    public void SetClearGame(bool clear)
+    {
+        isGameClear = clear;
+    }
+
 
     //멀티/1인 on/off버튼
     public void ServerTestOnOff()
@@ -93,5 +98,20 @@ public class GameStateManager : MonoBehaviourPun, IManager
     private void GameOver()
     {
         PhotonNetwork.LoadLevel("GameOverScene");
+    }
+
+    public void RPC_LeaveRoomAllPlayer()
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        Debug.Log("make player leave this room!");
+        photonView.RPC("LeaveRoomAllPlayer", RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void LeaveRoomAllPlayer()
+    {
+        PhotonNetwork.LeaveRoom();
+        Debug.Log("룸 퇴장 완료");
     }
 }
