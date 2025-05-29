@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Voice.PUN;
 using UnityEngine;
 
 public class GameStateManager : MonoBehaviourPun, IManager
@@ -13,9 +14,12 @@ public class GameStateManager : MonoBehaviourPun, IManager
 
     private bool isGameClear = false;
 
+    private float totalPlayTime = 0f;
+
     public void Init()
     {
         Debug.Log("GameStateManager 초기화 완료");
+        totalPlayTime = 0f;
         isGameStarted = false;
     }
 
@@ -88,6 +92,18 @@ public class GameStateManager : MonoBehaviourPun, IManager
         isServerTest = !isServerTest;
     }
 
+    public void PlusTotalPlayTime(float missionTime)
+    {
+        totalPlayTime += missionTime;
+        Debug.Log(totalPlayTime);
+    }
+
+    public float GetTotalPlayTime()
+    {
+        return totalPlayTime;
+    }
+
+
     [PunRPC]
     private void GameClear()
     {
@@ -111,7 +127,14 @@ public class GameStateManager : MonoBehaviourPun, IManager
     [PunRPC]
     private void LeaveRoomAllPlayer()
     {
-        PhotonNetwork.LeaveRoom();
-        Debug.Log("룸 퇴장 완료");
+        if (PunVoiceClient.Instance.Client != null &&
+            PunVoiceClient.Instance.Client.IsConnected)
+        {
+            PunVoiceClient.Instance.Client.Disconnect();
+        }
+
+        bool isSent = PhotonNetwork.LeaveRoom();
+
+        Debug.Log(isSent ? "방 퇴장 요청 전송" : "방 퇴장 요청 전송 실패");
     }
 }

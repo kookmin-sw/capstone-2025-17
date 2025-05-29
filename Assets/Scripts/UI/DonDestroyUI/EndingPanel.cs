@@ -1,9 +1,8 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class EndingPanel : MonoBehaviour
+public class EndingPanel : MonoBehaviourPunCallbacks
 {
     PopupUI popup;
 
@@ -15,8 +14,7 @@ public class EndingPanel : MonoBehaviour
     public void OnClickOkBtn()
     {
         Managers.GameStateManager.RPC_LeaveRoomAllPlayer();
-        PhotonNetwork.LoadLevel("LobbyScene");
+        popup.HideUI();
     }
-
 
 }

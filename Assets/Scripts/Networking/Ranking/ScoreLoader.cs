@@ -37,7 +37,7 @@ public class ScoreLoader : MonoBehaviour
             string[] players = ((List<object>)row["players"]).Select(p => p.ToString()).ToArray();
             
             infoTMPs[index].alignment = TextAlignmentOptions.Left;
-            infoTMPs[index++].text = $"{time:F2}초\t\t{string.Join(", ", players)}";
+            infoTMPs[index++].text = $"{SetScoreFormat(time)}\t\t{string.Join(", ", players)}";
 
         }
 
@@ -55,5 +55,23 @@ public class ScoreLoader : MonoBehaviour
     public void OnClickCloseBtn()
     {
         popupUI.HideUI();
+    }
+
+    private string SetScoreFormat(float time)
+    {
+        int min = (int) (time / 60f);
+        int sec = (int)(time % 60f);
+
+        string totalStr = string.Empty;
+
+        if (min > 0 )
+        {
+            totalStr = $"{min}분 {sec}초";
+        }
+        else if (min == 0)
+        {
+            totalStr = $"{sec}초\t";
+        }
+        return totalStr;
     }
 }

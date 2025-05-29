@@ -40,7 +40,7 @@ public class ScoreSaver : MonoBehaviour
 #if UNITY_EDITOR
         if (!PhotonNetwork.IsMasterClient) return;
 
-        float clearTime = Managers.GameTimerManager.GetClearTime();
+        float clearTime = Managers.GameStateManager.GetTotalPlayTime();
         Debug.Log($"[ Clear Condition ] : 클리어 시간 : {clearTime }");
         string[] nicknames = GetRoomPlayerNicknames();
 

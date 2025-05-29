@@ -8,6 +8,18 @@ public class BGMController : MonoBehaviour
 {
     [SerializeField] private SoundManager soundManager;
 
+    private bool isPlaying = false;
+
+    private void Start()
+    {
+        SoundManager[] otherSoundManagers = FindObjectsOfType<SoundManager>();
+        if (otherSoundManagers.Length > 1)
+        {
+            Debug.Log($"{otherSoundManagers.Length} SoundManagers in this scene");
+            Destroy(gameObject);
+        }
+    }
+
 
     private void OnEnable()
     {
@@ -21,8 +33,9 @@ public class BGMController : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "LobbyScene")
+        if (scene.name == "LobbyScene" && !isPlaying)
         {
+            isPlaying = true;
             soundManager.Play("BGM", ESoundType.BGM);
         }
     }

@@ -62,12 +62,12 @@ public class ClearArea : MonoBehaviour
                 if (curMission < 3)
                 {
                     Managers.MissionManager.GoNextMission();
+                    Managers.GameStateManager.PlusTotalPlayTime(Managers.GameTimerManager.GetNowTime());
                 }
                 #region 정보 전송
                 if (curMission == 3 || SceneManager.GetActiveScene().name == "Mission3")
                 {
                     HandleGameEnding();
-
                 }
                 #endregion
             }
@@ -86,13 +86,16 @@ public class ClearArea : MonoBehaviour
 
         Managers.GameStateManager.SetClearGame(true);
 
-        ScoreSaver saver = FindAnyObjectByType<ScoreSaver>();
-        saver.ShouldSendScore();
-
+        if (PhotonNetwork.IsMasterClient)
+        {
+            ScoreSaver saver = FindAnyObjectByType<ScoreSaver>();
+            saver.ShouldSendScore();
+        }
 
         UIManager.Instance.GetUI(UIType.Ending).ShowUI();
-        Time.timeScale = 0.1f;
+        Time.timeScale = 0.25f;
 
-
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }
