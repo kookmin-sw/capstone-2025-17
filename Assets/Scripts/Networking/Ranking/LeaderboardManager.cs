@@ -52,9 +52,7 @@ public class LeaderboardManager : MonoBehaviour
 
     void Start()
     {
-#if UNITY_EDITOR
         InitializeFirebase();
-#endif
     }
 
     private async void InitializeFirebase()

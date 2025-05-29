@@ -37,7 +37,6 @@ public class ScoreSaver : MonoBehaviour
 
     public async void SendScore()
     {
-#if UNITY_EDITOR
         if (!PhotonNetwork.IsMasterClient) return;
 
         float clearTime = Managers.GameStateManager.GetTotalPlayTime();
@@ -47,6 +46,5 @@ public class ScoreSaver : MonoBehaviour
         Debug.Log("클리어 정보  전송 준비");
 
         await LeaderboardManager.Instance.SaveLeaderboardData(clearTime, nicknames);
-#endif
     }
 }
