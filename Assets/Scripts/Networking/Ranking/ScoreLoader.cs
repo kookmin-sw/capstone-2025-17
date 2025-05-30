@@ -21,9 +21,7 @@ public class ScoreLoader : MonoBehaviour
 
     public void InvokeLoadRanking()
     {
-#if UNITY_EDITOR
         _ = LoadRanking();
-#endif
     }
 
     public async Task LoadRanking()
